@@ -14,7 +14,7 @@ WHITE = (200, 200, 200)
 BUTTON = (100, 100, 100)
 
 # Making a possibility for bigger Sudoku?
-Root_of_Rows = 2
+Root_of_Rows = 3
 ROW_COUNT = Root_of_Rows * Root_of_Rows
 COLUMN_COUNT = ROW_COUNT
 List_Possible = []
@@ -335,6 +335,7 @@ def get_square_number(x, y):
 # Then if a cells list of possibles is reduced to no options, the board is restarted.
 # After all that, this checks to see whether the puzzle is solvable using a separate function.
 # If that function returns the puzzle is solvable, this while loop breaks and the puzzle is generated.
+# Added a while loop to continuously remove possibles from List of Possibles turned to ints until no len(0) found.
 def start_values(board, List_Possible):
     global squares_index
     global square_number
@@ -342,7 +343,6 @@ def start_values(board, List_Possible):
     global solvable_ind
     global ROW_TRUE
     global COLUMN_TRUE
-    n = 0
     while solvable_ind == False:
         x = ((random.choice(TEST_LIST)) - 1)
         y = ((random.choice(TEST_LIST)) - 1)
@@ -366,6 +366,9 @@ def start_values(board, List_Possible):
                 if iteration in squares_index[square_number] and type(z) == list:
                     if cell in z:
                         z.remove(cell)
+            maybe = 0
+            while not maybe == (ROW_COUNT * COLUMN_COUNT):
+                maybe = 0
                 for iterate, l in enumerate(List_Possible):
                     if type(l) != int and len(l) == 1:
                         z = List_Possible[iterate].pop()
@@ -387,7 +390,7 @@ def start_values(board, List_Possible):
                                 if z in q:
                                     q.remove(z)
                     else:
-                        pass
+                        maybe += 1
             for l in List_Possible:
                 if type(l) == int:
                     pass
@@ -515,10 +518,14 @@ while not all_cells_entered:
             gridy = event.pos[1]
             pygame.draw.circle(screen, GREEN, (gridx, gridy), 2)
             pygame.display.update()
-            if board[(int((gridy/SQUARESIZE) - 1))][(int((gridx/SQUARESIZE) - 1))] == 0:
+            if board[(int((gridy/SQUARESIZE) - 1))][(int((gridx/SQUARESIZE) - 1))] == 0 or board[(int((gridy/SQUARESIZE) - 1))][(int((gridx/SQUARESIZE) - 1))] != List_Possible[(int((gridx/SQUARESIZE) - 1))+(int((gridy/SQUARESIZE) - 1)*len(TEST_LIST))]:
+                print(board[(int((gridy/SQUARESIZE) - 1))][(int((gridx/SQUARESIZE) - 1))])
+                print(List_Possible[(int((gridx / SQUARESIZE) - 1)) + (int((gridy / SQUARESIZE) - 1) * len(TEST_LIST))])
                 wait_for_key()
                 all_cells_check(board)
             else:
+                print(board[(int((gridy / SQUARESIZE) - 1))][(int((gridx / SQUARESIZE) - 1))])
+                print(List_Possible[(int((gridx / SQUARESIZE) - 1)) + (int((gridy / SQUARESIZE) - 1) * len(TEST_LIST))])
                 pygame.time.wait(1000)
                 draw_board(board)
 
