@@ -1,0 +1,69 @@
+import numpy
+import time
+ROW_COUNT = 8
+COLUMN_COUNT = 8
+
+
+def create_board():
+    board = numpy.zeros((ROW_COUNT, COLUMN_COUNT), dtype=int)
+    return board
+
+
+def complete_check(step):
+    global ROW_COUNT
+    global COLUMN_COUNT
+    if step == ROW_COUNT * COLUMN_COUNT:
+        return True
+
+
+def valid_move(x, y, board):
+    if 0 <= x < ROW_COUNT and 0 <= y < COLUMN_COUNT and board[x][y] == 0:
+        return True
+    return False
+
+
+def tour_function(x, y, board, pos, tracker_list):
+    global a
+    global z
+
+    for m in range(len(moves)):
+        if valid_move(x + moves[m][0], y + moves[m][1], board) and m >= a:
+            x += moves[m][0]
+            y += moves[m][1]
+            board[x][y] = pos
+            tracker_list.append(m)
+            a = 0
+            if complete_check(pos):
+                print(str(z) + " attempts made to find path.")
+                return True
+            if tour_function(x, y, board, pos + 1, tracker_list):
+                return True
+            board[x][y] = 0
+            x -= moves[tracker_list[-1]][0]
+            y -= moves[tracker_list[-1]][1]
+            a = tracker_list[-1] + 1
+            tracker_list.pop()
+            z += 1
+    return False
+
+t = time.localtime()
+current_time = time.strftime("%H:%M:%S", t)
+print(current_time)
+board = create_board()
+moves = [[2, 1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2], [2, -1]]
+a = 0
+z = 0
+x = 0
+y = 0
+pos = 1
+tracker_list = [0]
+board[x][y] = pos
+pos += 1
+if tour_function(x, y, board, pos, tracker_list):
+    print("Tour Complete")
+    print(board)
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+    print(current_time)
+else:
+    print("No Tour Exists")
