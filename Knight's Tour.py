@@ -1,4 +1,3 @@
-import numpy
 import time
 
 # CHECK THIS OUT, THIS WORKS FOR HUGE BOARDS!!!
@@ -9,7 +8,14 @@ COLUMN_COUNT = 8
 # This uses the numpy import to create a board that is ROW_COUNT wide and COLUMN_COUNT tall
 # It sets all values as an int valued at 0
 def create_board():
-    board = numpy.zeros((ROW_COUNT, COLUMN_COUNT), dtype=int)
+    board = []
+    subBoard = []
+    for x in range(ROW_COUNT + 1):
+        if len(subBoard) >> 0:
+            board.append(subBoard)
+            subBoard = []
+        for y in range(COLUMN_COUNT):
+            subBoard.append(0)
     return board
 
 
@@ -126,7 +132,8 @@ pos += 1
 # This calls the tour_function. If a solution is possible, it prints the path and ending time of the program.
 if tour_function(x, y, board, pos, tracker_list):
     print("Tour Complete")
-    print(board)
+    for row in board:
+        print(*row)
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
